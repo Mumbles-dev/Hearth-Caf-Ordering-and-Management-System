@@ -13,7 +13,7 @@ Public Class ProductTile
 
     Public Sub New(p As Product)
         Product = p
-        Picture = LoadPicture(p.ImagePath)
+        Picture = ImageStore.Load(p.ImagePath, 400)
     End Sub
 
     Private _qty As Integer
@@ -33,21 +33,5 @@ Public Class ProductTile
             Return _qty > 0
         End Get
     End Property
-
-    Private Shared Function LoadPicture(path As String) As BitmapImage
-        If String.IsNullOrWhiteSpace(path) OrElse Not File.Exists(path) Then Return Nothing
-        Try
-            Dim bmp As New BitmapImage()
-            bmp.BeginInit()
-            bmp.CacheOption = BitmapCacheOption.OnLoad   ' don't lock the file
-            bmp.DecodePixelWidth = 400
-            bmp.UriSource = New Uri(path)
-            bmp.EndInit()
-            bmp.Freeze()
-            Return bmp
-        Catch
-            Return Nothing
-        End Try
-    End Function
 
 End Class

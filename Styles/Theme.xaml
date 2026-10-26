@@ -120,18 +120,23 @@
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="Height" Value="40"/>
         <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
                     <Border x:Name="Bd" Background="{StaticResource SurfaceBrush}"
                             BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="8">
                         <Grid>
-                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"
-                                          VerticalAlignment="Center"/>
+                            <!-- No padding here: the TextBox applies its own Padding to the typed text -->
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="False"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <!-- The placeholder is our own element, so it needs the padding applied by hand -->
                             <TextBlock x:Name="Hint" Visibility="Collapsed" IsHitTestVisible="False"
                                        Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
                                        Foreground="{StaticResource MutedBrush}"
-                                       Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+                                       Margin="{TemplateBinding Padding}"
+                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                       TextTrimming="CharacterEllipsis"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -208,6 +213,139 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Bd" Property="Background" Value="{StaticResource ChipBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- White button with a border (Cancel) -->
+    <Style x:Key="OutlineButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                            BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="8">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource BgBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- On/off switch -->
+    <Style x:Key="SwitchToggle" TargetType="ToggleButton">
+        <Setter Property="Width" Value="36"/>
+        <Setter Property="Height" Value="21"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="Track" Background="#D9CBBB" CornerRadius="10.5" Padding="3">
+                        <Ellipse x:Name="Knob" Width="15" Height="15" Fill="White" HorizontalAlignment="Left"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Track" Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                            <Setter TargetName="Knob" Property="HorizontalAlignment" Value="Right"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Text that acts like a link (Change photo, Use it) -->
+    <Style x:Key="LinkButton" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter/>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="#7A5539"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Search bar: the icon is part of the layout, text starts right after it -->
+    <Style x:Key="SearchBox" TargetType="TextBox">
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="Bd" Background="{StaticResource SurfaceBrush}"
+                            BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="8">
+                        <Grid Margin="12,0,12,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                       Foreground="{StaticResource MutedBrush}"
+                                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <Grid Grid.Column="1" VerticalAlignment="Center">
+                                <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="Hint" Visibility="Collapsed" IsHitTestVisible="False"
+                                           Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                           Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="Hint" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Destructive action (Archive) with its own background -->
+    <Style x:Key="DangerButton" TargetType="Button">
+        <Setter Property="Background" Value="#F3E3DF"/>
+        <Setter Property="Foreground" Value="#A4493D"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                            BorderBrush="#E8CDC7" BorderThickness="1" CornerRadius="8">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#EBD2CC"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -1,7 +1,7 @@
 ﻿Class Application
     Protected Overrides Sub OnStartup(e As StartupEventArgs)
         Db.Initialize()
-        SampleData.Seed()        ' TEMPORARY: remove when Menu Management is done
+        SampleData.Seed()
         MyBase.OnStartup(e)
     End Sub
 
